@@ -28,6 +28,10 @@
 - `check-eslint-config` - check if ESLint config contains any rules that are unnecessary or conflict with Prettier
 - `check-stylelint-config` - check if Stylelint config contains any rules that are unnecessary or conflict with Prettier
 
+## Hosting
+
+As of creation, due to limitations of WebFlow, we're also using this repo also as the [host](https://www.jsdelivr.com/github) for production files. Don't ignore the build folder! If you make another build, you'll just have to change the hash in the file URLs in the Webflow builder to match the new ones.
+
 ## Gotchas
 
 This interactive was built on [this boilerplate](https://github.com/vadimmarkov/webpack-es6-sass-boilerplate). Because of that, we have to note some strangeness that could pop up during development.
