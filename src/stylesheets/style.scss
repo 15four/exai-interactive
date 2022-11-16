@@ -1,0 +1,573 @@
+//
+// Exai Interactive Styles.
+//
+// We're not over-engineering our build system here.
+// As a result this file holds all of the style information needed to style up this interactive.
+//
+// Relevant sections for normalization, variables, etc.have been labelled, though.
+//
+
+// Temporary Webflow stuff --------------------------------- //
+// Make sure to comment this out before the build ---------- //
+
+// @import url('https://global-uploads.webflow.com/6331c352f5d5d86766131bba/css/exai.webflow.7e8262541.min.css');
+
+// .other-things {
+// 	display: flex;
+// 	height: 50vh;
+// 	flex-direction: column;
+// 	justify-content: center;
+// 	background-color: white;
+// 	text-align: center;
+// }
+
+/* General things ------------------------- */
+/* ---------------------------------------- */
+/* ---------------------------------------- */
+/* Mobile  : < 480px ---------------------- */
+/* Desktop : > 992px ---------------------- */
+/* ---------------------------------------- */
+
+// body {
+// 	font-smoothing: antialiased;
+// 	-webkit-font-smoothing: antialiased;
+// }
+
+/* Custom Funsies ------------------------- */
+/* ---------------------------------------- */
+
+/* Custom icons --------------------------- */
+
+.custom-icon {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.custom-icon__svg {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.custom-icon__svg:not(:root) {
+	overflow: visible;
+}
+
+.custom-icon__filled {
+	fill: currentColor;
+}
+
+.custom-icon__stroked {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	vector-effect: non-scaling-stroke;
+	shape-rendering: geometricPrecision;
+}
+
+.custom-icon__stroked--thiccish {
+	stroke-width: 2.5;
+}
+
+.custom-icon__stroked--thicc {
+	stroke-width: 3;
+}
+
+.custom-icon__stroked--oh-lawd-he-comin {
+	stroke-width: 6;
+}
+
+/* Marquees ------------------------------- */
+
+@keyframes marquee {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.marquee__text {
+	position: relative;
+	width: 100%;
+	height: 1.5em;
+	margin: 0 -0.25em;
+	overflow-x: hidden;
+}
+
+.marquee__track {
+	position: absolute;
+	white-space: nowrap;
+	will-change: transform;
+	animation: marquee 20s linear infinite;
+}
+
+.marquee__track::before,
+.marquee__track::after {
+	content: attr(marquee-content);
+	display: inline;
+}
+
+/* Webflow Overrides ---------------------- */
+/* ---------------------------------------- */
+
+/* Publiction Lists ----------------------- */
+
+.publication-list__item:last-child {
+	padding-bottom: 0;
+	border-bottom: 0;
+	margin-bottom: 0;
+}
+
+@media screen and (min-width: 992px) {
+
+	.publication-list__item--halves:nth-last-child(2) {
+		padding-bottom: 0;
+		border-bottom: 0;
+		margin-bottom: 0;
+	}
+}
+
+/* Long Form ------------------------------ */
+
+.long-form__rich-text> :empty {
+	display: none !important;
+}
+
+.long-form__rich-text> :first-child {
+	margin-top: 0 !important;
+}
+
+.long-form__rich-text> :last-child {
+	margin-bottom: 0 !important;
+}
+
+// Normalization ------------------------------------------- //
+
+@import '~normalize.css/normalize.css';
+
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+// Typography ---------------------------------------------- //
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+html {
+	font-family: 'Poppins', sans-serif;
+}
+
+// Variables ----------------------------------------------- //
+
+// Colors
+
+$seaCrystal: #60fcde;
+$auroraPurple: #a259ff;
+$hotCoral: #f2336a;
+$white: #ffffff;
+
+// Breakpoints
+
+$mobileLandscape: 479;
+$tablet: 768;
+$desktop: 992;
+$lg: 1280;
+$xl: 1440;
+$xxl: 1920;
+
+// Interactive
+
+$bgImgAspectRatio: 16/9;
+$bgImgAspectRatioStr: '16/9';
+
+// Mixins -------------------------------------------------- //
+
+@mixin media($width, $max: false) {
+
+	$bound: if($max, 'max', 'min');
+	$width: if($max, $width - 1, $width);
+
+	@media screen and (#{$bound}-width: #{$width}px) {
+		@content;
+	}
+}
+
+@mixin wfDesignModeOnly {
+
+	.wf-design-mode & {
+		@content;
+	}
+}
+
+// The Interactive ----------------------------------------- //
+
+.exai-interactive {
+
+	$block: &;
+
+	$width: 100vw;
+	$height: 100vh;
+
+	@at-root {
+
+		// The Setup Bit.
+		//
+		// This is where content managers specify the content of the interactive.
+		// This part is hidden in the published site, but shown in the Webflow editor.
+		//
+
+		&__setup {
+			display: none;
+
+			@include wfDesignModeOnly() {
+				display: block;
+			}
+		}
+
+		// The Interactive Bit
+		//
+		// This is where all of the fun stuff specfied in the setup bit comes to life.
+		// This part is hidden in the Webflow editor, but is shown on the published site.
+		//
+		// Here, we define needed stylistic information for how pieces of the interactive such as images and content display.
+		//
+
+		&__interactive {
+			position: relative;
+			z-index: 0;
+			width: $width;
+			height: $height;
+			color: white; // TODO: Remove before launch
+
+			@include wfDesignModeOnly() {
+				display: none;
+			}
+		}
+
+		&__background-container {
+			display: flex;
+			position: absolute;
+			z-index: -1;
+			inset: 0;
+			justify-content: center;
+			align-items: center;
+			overflow: hidden;
+		}
+
+		// Background sizer forces the background to always maintain the same aspect ratio of its source image.
+		// This helps with normalization for the canvas js stuff later on. Trust me.
+		&__background-sizer {
+			display: flex;
+			position: relative;
+			flex: 0 0 auto;
+			width: $bgImgAspectRatio * 100vh;
+			height: $height;
+			justify-content: center;
+			align-items: center;
+
+			@media (min-aspect-ratio: $bgImgAspectRatioStr) {
+				$height: 1 / $bgImgAspectRatio * $width;
+
+				width: 100vw;
+				height: $height;
+			}
+		}
+
+		// The actual background.
+		// Use this to set sizing (as percentages for both height and width).
+		// Use this to set positioning (as percentages for both height and width).
+		&__background {
+
+			$size: 100%;
+
+			position: relative;
+			left: -13%;
+			width: $size;
+			height: $size;
+			flex: 0 0 auto;
+			transform-origin: 62.75% 37.2%;
+
+			@include media($desktop) {
+
+				$size: 165%;
+
+				top: 10%;
+				left: -5%;
+				width: $size;
+				height: $size;
+			}
+		}
+
+		// The focal point
+		// This specifies where the first shape is going to originate from and how large it will be.
+		&__focal-point {
+			position: absolute;
+			z-index: 1;
+			top: 36%;
+			left: 64.85%;
+			width: 3%;
+
+			// For manual positioning
+			// TODO: Remove before launch
+			// background: red;
+			// opacity: 0.5;
+			// border-radius: 100%;
+
+			@include media($desktop) {
+				top: 36.5%;
+				left: 56.3%;
+				width: 3.5%;
+			}
+		}
+
+		&__focal-point-sizer {
+			padding-top: 100%;
+		}
+
+		// The actual canvas
+		// This probably shouldn't be changed.
+		&__canvas {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		// General Content Things ---------- //
+
+		&__content-container {
+			height: 100%;
+		}
+
+		&__content-positioner {
+			display: flex;
+			height: 100%;
+			padding-top: 48px;
+			padding-bottom: 32px;
+			flex-direction: column;
+			justify-content: center;
+
+			@include media($desktop) {
+				padding-top: 108px;
+				padding-bottom: 108px;
+			}
+		}
+
+		&__content-grid {
+			display: flex;
+			position: relative;
+			height: 100%;
+			flex-direction: column;
+
+			@include media($desktop) {
+				display: grid;
+				row-gap: 0;
+				height: auto;
+
+				grid-template-areas:
+					'h h h h none s s s s s s s'
+					'b b b b none s s s s s s s'
+					'p p p p none s s s s s s s';
+			}
+		}
+
+		&__dynamic-component-container {
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr;
+			grid-template-areas: 'dc';
+			position: relative;
+		}
+
+		&__header-container {
+			order: 0;
+			flex: 0 0 auto;
+
+			@include media($desktop) {
+				grid-area: h;
+			}
+		}
+
+		&__body-container {
+			order: 3;
+			flex: 0 0 auto;
+
+			@include media($desktop) {
+				grid-area: b;
+				margin-bottom: 56px;
+			}
+		}
+
+		// This is where dynamic content supplied by the site admins gets populated in.
+		// One container like these per slide.
+
+		&__dynamic-component {
+			display: flex;
+			grid-area: dc;
+			flex-direction: column;
+		}
+
+		&__dynamic-header {
+			justify-content: flex-start;
+
+			> :first-child {
+				margin-top: 0;
+			}
+
+			@include media($tablet, true) {
+				> :last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			@include media($desktop) {
+				justify-content: flex-end;
+			}
+		}
+
+		&__dynamic-body {
+
+			// The last stage has a bit of a unique treatment here.
+			// Snap it to the bottom.
+			&:last-child {
+				position: absolute;
+				bottom: 0;
+			}
+
+			> :first-child {
+				margin-top: 0;
+			}
+
+			> :last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		// Progress Bar / Nav -------------- //
+
+		&__progress-container {
+			order: 2;
+			flex: 0 0 auto;
+			margin-bottom: 8px;
+
+			@include media($desktop) {
+				grid-area: p;
+				padding-right: 40px;
+				margin-bottom: 0;
+			}
+		}
+
+		&__progress {
+			display: grid;
+			grid-auto-flow: column;
+			column-gap: 8px;
+		}
+
+		&__progress-stage {
+
+			$height: 4px;
+
+			height: $height;
+			background-color: $white;
+			border-radius: $height / 2;
+			overflow: hidden;
+		}
+
+		&__progress-stage-bar {
+			width: 100%;
+			height: 100%;
+			background-color: $seaCrystal;
+			transform-origin: left center;
+		}
+
+		// Shape Guides -------------------- //
+		// These provide the canvas js a predictable and responsive place to go in animation.
+
+		&__shape-container {
+			display: flex;
+			position: relative;
+			flex: 1 0 auto;
+			order: 1;
+			justify-content: center;
+			align-items: center;
+
+			@include media($desktop) {
+				grid-area: s;
+				flex-direction: column;
+			}
+		}
+
+		&__shape-guide {
+
+			$width: 773;
+			$height: 544;
+
+			visibility: hidden;
+			position: relative;
+			width: 100%;
+			padding-top: $height / $width * 100%;
+			// opacity: 0.125;
+
+			@include media($desktop) {
+				position: absolute;
+			}
+		}
+
+		&__shape-guide-svg {
+			position: absolute;
+			inset: 0;
+		}
+
+		// Scroll Prompt ------------------- //
+		// This is the little dude that tells one to scroll.
+
+		&__scroll-prompt-positioner {
+			position: absolute;
+			bottom: 24px;
+			width: 100%;
+		}
+
+		&__scroll-prompt-grid {
+			display: grid;
+		}
+
+		&__scroll-prompt-column {
+			grid-column: 5 / span 4;
+		}
+
+		&__scroll-prompt {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+
+		&__scroll-prompt-text {
+			width: 100%;
+			font-weight: 600;
+			text-transform: uppercase;
+			text-align: center;
+		}
+
+		&__scroll-prompt-arrow {
+
+			$size: 32px;
+
+			width: $size;
+			height: $size;
+		}
+	}
+}
