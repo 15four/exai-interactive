@@ -419,6 +419,7 @@ $bgImgAspectRatioStr: '16/9';
 			display: flex;
 			grid-area: dc;
 			flex-direction: column;
+			align-items: flex-start;
 		}
 
 		&__dynamic-header {
