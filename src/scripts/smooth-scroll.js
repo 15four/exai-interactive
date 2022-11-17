@@ -26,9 +26,7 @@ export default class ExaiSmoothScroller {
 
 		const defaultConfig = {
 
-			smoothness            : 0.75,
-			touchDeviceSmoothness : 0.05
-
+			smoothness : 0.75,
 		};
 
 		this.config = mergeObj( defaultConfig, config );
@@ -58,7 +56,6 @@ export default class ExaiSmoothScroller {
 				wrapper            : this.element,
 				content            : this.content,
 				smooth             : this.config.smoothness,
-				smoothTouch        : this.config.touchDeviceSmoothness,
 				normalizeScroll    : true,
 				ignoreMobileResize : true
 			} );

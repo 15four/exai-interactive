@@ -33,10 +33,10 @@ export default class ExaiInteractive {
 		const defaultConfig = {
 
 			scrollLength               : 9,
-			scrubFactor                : true,
+			scrubFactor                : 0.5,
 
-			snapScroll                 : false,
-			snapDelay                  : 0.2,
+			snapScroll                 : true,
+			snapDelay                  : 0.1,
 			snapDurationMin            : 0.05,
 			snapDurationMax            : 1.25,
 
@@ -69,13 +69,13 @@ export default class ExaiInteractive {
 			shapeExpandStagger         : 0.125,
 			shapeSnapStagger           : 0.05,
 
-			stageInDuration            : 0.25,
-			stageOutDelay              : 3,
-			stageOutDuration           : 0.25,
+			stageInDuration            : 0.15,
+			stageOutDelay              : 4,
+			stageOutDuration           : 0.15,
 
-			textComponentStagger       : 0.25,
-			textComponentChildStagger  : 0.15,
-			lettersDuration            : 0.5,
+			textComponentStagger       : 0.5,
+			textComponentChildStagger  : 0.25,
+			lettersDuration            : 0.666,
 			lettersStagger             : 0.06,
 			headingLettersStagger      : 0.06,
 			bodyLettersStagger         : 0.0055,
@@ -204,9 +204,7 @@ export default class ExaiInteractive {
 
 		gsap.config( { force3D: true } );
 
-		ScrollTrigger.config( { ignoreMobileResize: true } );
-
-		// Setting up the drawables ------------------------- //
+		// Setting up the canvas ---------------------------- //
 
 		// Create all of the references for background canvas entities.
 		// These will be used to draw and animate later on.
@@ -258,166 +256,67 @@ export default class ExaiInteractive {
 		} );
 
 		// Then, the drawables.
-		// These are the shapes that actually get drawn onto the canvas.
-		// Start with the basics.
+		// These are the things that actually get drawn onto the canvas.
 
 		this.drawables = {};
 
+		// Start with the backgrounds and the images.
 
+		this.drawables.rainbow = new fabric.Rect( { fill: this.styles.rainbowGradient, statefullCache: true, cacheProperties: [this.cacheBusterKey] } );
 
+		const imageOptions = { originX: 'center', originY: 'center' };
 
-
-		// -----------------------------
-		// -----------------------------
-		// IMAGE EXPERIMENT ------------
-		// -----------------------------
-		// -----------------------------
-
-		// Setting up
-
-		// this.shapeMaskBackground = new fabric.Rect( { fill: 'transparent' } );
-		// this.shapeMaskShapes = [];
-
-		// for ( let i = 0; i < this.shapes.length; i++ ) {
-
-		// 	let shape;
-
-		// 	const allShapeOptions  = { originX: 'center', originY: 'center' };
-		// 	const shapeOptions     = mergeObj( allShapeOptions, { fill: 'black' } );
-
-		// 	switch ( this.shapes[i].tagName.toLowerCase() ) {
-
-		// 		case 'circle':
-		// 			shape     = new fabric.Circle( shapeOptions );
-		// 			break;
-
-		// 		case 'rect':
-		// 			shape     = new fabric.Rect( shapeOptions );
-		// 			break;
-		// 	}
-
-		// 	shape[this.strokeWidthKey] = 0;
-		// 	shape[this.scaleKey]       = 1;
-
-		// 	this.shapeMaskShapes.push( shape );
-		// }
-
-		// this.drawables.shapeMaskGroup = new fabric.Group( [], { absolutePositioned: true } );
-		// this.drawables.shapeMaskGroup.add( this.shapeMaskBackground, ...this.shapeMaskShapes );
-
-		// this.drawables.shapeImage = new fabric.Image(
-		// 	this.setupBackgroundImage, {
-		// 		clipPath        : this.drawables.shapeMaskGroup,
-		// 		originX         : 'center',
-		// 		originY         : 'center',
-		// 		statefullCache  : true,
-		// 		cacheProperties : [this.cacheBusterKey]
-		// 	}
-		// );
-
-		// // Positioning
-
-		// this.shapeMaskBackground.top = -this.dimensions.background.halfHeight;
-		// this.shapeMaskBackground.left = -this.dimensions.background.halfWidth;
-		// this.shapeMaskBackground.width = this.dimensions.background.width;
-		// this.shapeMaskBackground.height = this.dimensions.background.height;
-
-		// this.drawables.shapeMaskGroup.top = 0;
-		// this.drawables.shapeMaskGroup.left = 0;
-		// this.drawables.shapeMaskGroup.width = this.dimensions.background.width;
-		// this.drawables.shapeMaskGroup.height = this.dimensions.background.height;
-
-		// for ( const [i, shapeMaskShape] of this.shapeMaskShapes.entries() ) {
-
-		// 	shapeMaskShape.top  = this.dimensions[`shape${i}FromBackground`].cy - this.dimensions.background.halfHeight;
-		// 	shapeMaskShape.left = this.dimensions[`shape${i}FromBackground`].cx - this.dimensions.background.halfWidth;
-
-		// 	if ( shapeMaskShape instanceof fabric.Circle ) {
-
-		// 		shapeMaskShape.radius = i === this.focalPointShapeIndex
-		// 			? this.dimensions.focalPointFromBackground.halfWidth
-		// 			: this.dimensions[`shape${i}FromBackground`].halfWidth
-
-		// 	}
-		// 	else if ( shapeMaskShape instanceof fabric.Rect ) {
-		// 		shapeMaskShape.width  = this.dimensions[`shape${i}FromBackground`].width;
-		// 		shapeMaskShape.height = this.dimensions[`shape${i}FromBackground`].height;
-		// 		shapeMaskShape.rx     = this.dimensions[`shape${i}FromBackground`].halfHeight;
-		// 		shapeMaskShape.ry     = this.dimensions[`shape${i}FromBackground`].halfHeight;
-		// 	}
-
-		// }
-
-		// for ( const drawable of Object.values( this.drawables ) ) {
-		// 	this.fabricCanvas.add( drawable );
-		// }
-
-		// return;
-
-		// -----------------------------
-		// -----------------------------
-		// END IMAGE EXPERIMENT --------
-		// -----------------------------
-		// -----------------------------
-
-
-
-
-
-
-		this.drawables.rainbow        = new fabric.Rect( { fill: this.styles.rainbowGradient, statefullCache: true, cacheProperties: [this.cacheBusterKey] } );
-
-		this.drawables.rainbowImage   = new fabric.Image( this.setupBackgroundImage, { originX: 'center', originY: 'center' } );
+		this.drawables.rainbowImage = new fabric.Image( this.setupBackgroundImage, imageOptions );
 		this.drawables.rainbowImage[this.scaleKey] = 1;
 
-		// Then, tackle the shapes, masks, and mask images.
+		this.drawables.maskImage = new fabric.Image(
+			this.setupBackgroundImage,
+			mergeObj( imageOptions, { statefullCache: true, cacheProperties: [this.cacheBusterKey] } ) 
+		);
+		this.drawables.maskImage[this.scaleKey] = 1;
 
-		this.drawableShapes      = [];
-		this.drawableShapeMasks  = [];
-		this.drawableShapeImages = [];
+		// Then, tackle the mask and shapes.
 
-		const allShapeOptions  = { originX: 'center', originY: 'center' };
-		const shapeOptions     = mergeObj( allShapeOptions, { fill: 'transparent', stroke: this.colors.white, strokeWidth: 0 } );
-		const shapeMaskOptions = mergeObj( allShapeOptions, { absolutePositioned: true } );
+		this.maskBackground = new fabric.Rect( { fill: 'transparent' } );
+		this.drawables.mask = new fabric.Group( [this.maskBackground], { absolutePositioned: true } );
+
+		this.maskShapes     = [];
+
+		this.drawableShapes = [];
+
+		const allShapeOptions      = { originX: 'center', originY: 'center' };
+		const drawableShapeOptions = { fill: 'transparent', stroke: this.colors.white, strokeWidth: 0 };
 
 		for ( let i = 0; i < this.shapes.length; i++ ) {
 
-			let shape, shapeMask;
+			let maskShape, shape;
 
 			switch ( this.shapes[i].tagName.toLowerCase() ) {
 
 				case 'circle':
-					shape     = new fabric.Circle( shapeOptions );
-					shapeMask = new fabric.Circle( shapeMaskOptions );
+					maskShape = new fabric.Circle( allShapeOptions );
+					shape     = new fabric.Circle( mergeObj( allShapeOptions, drawableShapeOptions ) );
 					break;
 
 				case 'rect':
-					shape     = new fabric.Rect( shapeOptions );
-					shapeMask = new fabric.Rect( shapeMaskOptions );
+					maskShape = new fabric.Rect( allShapeOptions );
+					shape     = new fabric.Rect( mergeObj( allShapeOptions, drawableShapeOptions ) );
 					break;
 			}
+
+			maskShape[this.scaleKey] = 1;
 
 			shape[this.strokeWidthKey] = 0;
 			shape[this.scaleKey]       = 1;
 
-			shapeMask[this.strokeWidthKey] = 0;
-			shapeMask[this.scaleKey]       = 1;
-
-			const shapeImage = new fabric.Image(
-				this.setupBackgroundImage,
-				{ originX: 'center', originY: 'center', clipPath: shapeMask, statefullCache: true, cacheProperties: [this.cacheBusterKey] }
-			);
-			shapeImage[this.scaleKey] = 1;
+			this.maskShapes.push( maskShape );
+			this.drawables.mask.add( maskShape );
 
 			this.drawables[`shape${i}`] = shape;
 			this.drawableShapes.push( shape );
-
-			this.drawables[`shape${i}Mask`] = shapeMask;
-			this.drawableShapeMasks.push( shapeMask );
-
-			this.drawables[`shape${i}Image`] = shapeImage;
-			this.drawableShapeImages.push( shapeImage );
 		}
+
+		this.drawables.maskImage.clipPath = this.drawables.mask;
 
 		// Add them all to the canvas at once.
 
@@ -425,12 +324,9 @@ export default class ExaiInteractive {
 			this.fabricCanvas.add( drawable );
 		}
 
-		for ( let i = 0; i < this.drawableShapes.length; i++ ) {
-			this.fabricCanvas.bringToFront( this.drawableShapes[i] );
-			this.fabricCanvas.sendToBack( this.drawableShapeMasks[i] );
-		}
+		this.fabricCanvas.sendToBack( this.drawables.mask );
 
-		// Setting up the other elements ---------------- //
+		// Setting up the other elements -------------------- //
 
 		// Next, we have to create all of the references for other animatable entities.
 
@@ -486,8 +382,6 @@ export default class ExaiInteractive {
 	 */
 	createTheSacredTimeline() {
 
-		return;
-
 		// Creating the timeline object --------------------- //
 
 		const snapScrollProps = {
@@ -510,7 +404,7 @@ export default class ExaiInteractive {
 
 		// Setting initial states --------------------------- //
 
-		// Start with the basics
+		// Start with the background and images
 
 		this.theSacredTimeline.set(
 			this.background,
@@ -533,36 +427,55 @@ export default class ExaiInteractive {
 			{ opacity: 0, [this.scaleKey]: () => this.ratios.backgroundToImage }
 		);
 
-		// Then, do the shapes.
+		// Then, the mask
+
+		this.theSacredTimeline.set(
+			[this.maskBackground, this.drawables.mask],
+			{
+				width  : () => this.dimensions.background.width,
+				height : () => this.dimensions.background.height,
+			}
+		)
+
+		// Then, do the mask shapes and regular shapes.
 		// These get a little bit 'o randomization.
 
-		for ( const [i, shape] of this.drawableShapes.entries() ) {
+		for ( let i = 0; i < this.shapes.length; i++ ) {
 
-			const props = {
-				top             : () => this.dimensions.focalPointFromBackground.cy,
-				left            : () => this.dimensions.focalPointFromBackground.cx,
+			const maskShape = this.maskShapes[i];
+			const shape     = this.drawableShapes[i];
+
+			const allShapeProps = {
 				opacity         : 0,
 				[this.scaleKey] : 0,
 				angle           : () => randInRange( this.config.shapeRotateFromMin, this.config.shapeRotateFromMax, true ),
 			};
 
+			const maskShapeProps = {
+				top  : () => this.dimensions.focalPointFromBackground.cy - this.dimensions.background.halfHeight,
+				left : () => this.dimensions.focalPointFromBackground.cx - this.dimensions.background.halfWidth
+			};
+
+			const drawableShapeProps = {
+				top  : () => this.dimensions.focalPointFromBackground.cy,
+				left : () => this.dimensions.focalPointFromBackground.cx,
+			};
+
 			if ( shape instanceof fabric.Circle ) {
-				props.radius = i === this.focalPointShapeIndex
+				allShapeProps.radius = i === this.focalPointShapeIndex
 					? () => this.dimensions.focalPointFromBackground.halfWidth
 					: () => this.dimensions[`shape${i}FromBackground`].halfWidth
 
 			}
 			else if ( shape instanceof fabric.Rect ) {
-				props.width  = () => this.dimensions[`shape${i}FromBackground`].width;
-				props.height = () => this.dimensions[`shape${i}FromBackground`].height;
-				props.rx     = () => this.dimensions[`shape${i}FromBackground`].halfHeight;
-				props.ry     = () => this.dimensions[`shape${i}FromBackground`].halfHeight;
+				allShapeProps.width  = () => this.dimensions[`shape${i}FromBackground`].width;
+				allShapeProps.height = () => this.dimensions[`shape${i}FromBackground`].height;
+				allShapeProps.rx     = () => this.dimensions[`shape${i}FromBackground`].halfHeight;
+				allShapeProps.ry     = () => this.dimensions[`shape${i}FromBackground`].halfHeight;
 			}
 
-			this.theSacredTimeline.set(
-				[shape, this.drawableShapeMasks[i]],
-				props
-			);
+			this.theSacredTimeline.set( maskShape, mergeObj( allShapeProps, maskShapeProps ) );
+			this.theSacredTimeline.set( shape, mergeObj( allShapeProps, drawableShapeProps ) );
 		}
 
 		// Then, do the animatable content elements.
@@ -679,7 +592,11 @@ export default class ExaiInteractive {
 		// Set up the opacity
 		// This is so that they don't start rendering in a weird way before the images animate in.
 
-		this.theSacredTimeline.set(	this.getShapes( [1, 1, 1] ), { opacity: 1 }, getLabelTime( this.theSacredTimeline, 'stage0ContentIn' ) );
+		this.theSacredTimeline.set(
+			[...this.getShapes( [1, 1] ), ...this.getImages( [0, 1] )],
+			{ opacity: 1 },
+			getLabelTime( this.theSacredTimeline, 'stage0ContentIn' )
+		);
 
 		// Expand the focal point
 
@@ -706,20 +623,26 @@ export default class ExaiInteractive {
 
 		// Snapping them all into place
 
-		for ( let i = 0; i < this.drawableShapes.length; i++ ) {
+		for ( let i = 0; i < this.shapes.length; i++ ) {
 
-			this.addInBetweenTween(
-				this.getShapes( [1, 1], i ),
-				{
-					top             : () => this.dimensions[`shape${i}FromBackground`].cy,
-					left            : () => this.dimensions[`shape${i}FromBackground`].cx,
-					angle           : 0,
-					[this.scaleKey] : 1,
-				},
-				'stage2Snap',
-				'stage3Snap',
-				this.config.shapeSnapStagger * i
-			);
+			const startLabel = 'stage2Snap';
+			const endLabel   = 'stage3Snap';
+			const offset     = this.config.shapeSnapStagger * i;
+
+			const allShapeProps = { angle: 0, [this.scaleKey]: 1 };
+
+			const maskShapeProps = {
+				top  : () => this.dimensions[`shape${i}FromBackground`].cy - this.dimensions.background.halfHeight,
+				left : () => this.dimensions[`shape${i}FromBackground`].cx - this.dimensions.background.halfWidth
+			};
+
+			const drawableShapeProps = {
+				top  : () => this.dimensions[`shape${i}FromBackground`].cy,
+				left : () => this.dimensions[`shape${i}FromBackground`].cx
+			};
+
+			this.addInBetweenTween(	this.maskShapes[i], mergeObj( allShapeProps, maskShapeProps ), startLabel, endLabel, offset );
+			this.addInBetweenTween(	this.drawableShapes[i], mergeObj( allShapeProps, drawableShapeProps ), startLabel, endLabel, offset );
 		}
 
 		// Adding their strokes
@@ -727,7 +650,7 @@ export default class ExaiInteractive {
 		for ( let i = 0; i < this.drawableShapes.length; i++ ) {
 
 			this.addInBetweenTween(
-				this.getShapes( [1, 1], i ),
+				this.getShapes( [1], i ),
 				{ [this.strokeWidthKey] : this.config.shapeStrokeWidth },
 				'stage3In',
 				'stage3Snap',
@@ -737,21 +660,30 @@ export default class ExaiInteractive {
 
 		// Fading them out
 
-		for ( let i = 0; i < this.drawableShapes.length; i++ ) {
+		for ( let i = 0; i < this.shapes.length; i++ ) {
 
-			this.addInBetweenTween(
-				this.getShapes( [1, 1], i ),
-				{
-					top             : () => this.dimensions.focalPointFromBackground.cy + randInRange( this.dimensions.shapeGuide.height * this.config.shapeToYMin ),
-					left            : () => this.dimensions.focalPointFromBackground.cx + randInRange( this.dimensions.shapeGuide.width * this.config.shapeToXMin ),
-					opacity         : 0,
-					angle           : () => randInRange( this.config.shapeRotateToMin, this.config.shapeRotateToMax, true ),
-					[this.scaleKey] : 0
-				},
-				'stage3ContentOut',
-				'stage4Snap',
-				this.config.shapeExpandStagger * i
-			);
+			const startLabel = 'stage3ContentOut';
+			const endLabel   = 'stage4Snap';
+			const offset     = this.config.shapeSnapStagger * i;
+
+			const allShapeProps = {
+				opacity         : 0,
+				angle           : () => randInRange( this.config.shapeRotateToMin, this.config.shapeRotateToMax, true ),
+				[this.scaleKey] : 0
+			};
+
+			const maskShapeProps = {
+				top  : () => this.dimensions.focalPointFromBackground.cy - this.dimensions.background.halfHeight + randInRange( this.dimensions.shapeGuide.height * this.config.shapeToYMin ),
+				left : () => this.dimensions.focalPointFromBackground.cx - this.dimensions.background.halfWidth + + randInRange( this.dimensions.shapeGuide.width * this.config.shapeToXMin )
+			};
+
+			const drawableShapeProps = {
+				top  : () => this.dimensions.focalPointFromBackground.cy + randInRange( this.dimensions.shapeGuide.height * this.config.shapeToYMin ),
+				left : () => this.dimensions.focalPointFromBackground.cx + randInRange( this.dimensions.shapeGuide.width * this.config.shapeToXMin )
+			};
+
+			this.addInBetweenTween( this.maskShapes[i], mergeObj( allShapeProps, maskShapeProps ), startLabel, endLabel, offset	);
+			this.addInBetweenTween( this.drawableShapes[i], mergeObj( allShapeProps, drawableShapeProps ), startLabel, endLabel, offset	);
 		}
 
 		// Hoisting up the snap labels ---------------------- //
@@ -833,20 +765,19 @@ export default class ExaiInteractive {
 	handleUpdate() {
 
 		this.bustCache( this.drawables.rainbow );
+		this.bustCache( this.drawables.maskImage );
 
 		for ( const image of this.getImages( [1, 1] ) ) {
 			image.scale( image[this.scaleKey] );
 			image.center();
 		}
 
-		for ( let i = 0; i < this.drawableShapes.length; i++ ) {
+		for ( let i = 0; i < this.shapes.length; i++ ) {
 
 			this.drawableShapes[i].scale( this.drawableShapes[i][this.scaleKey] );
-			this.drawableShapeMasks[i].scale( this.drawableShapes[i][this.scaleKey] );
+			this.maskShapes[i].scale( this.maskShapes[i][this.scaleKey] );
 
 			this.drawableShapes[i].set( 'strokeWidth', this.drawableShapes[i][this.strokeWidthKey] );
-
-			this.bustCache( this.drawableShapeImages[i] );
 		}
 
 		this.fabricCanvas.renderAll();
@@ -915,7 +846,7 @@ export default class ExaiInteractive {
 	getImages( includes = [1], index = null ) {
 
 		return this.getDrawables(
-			[[this.drawables.rainbowImage], this.drawableShapeImages],
+			[[this.drawables.rainbowImage], [this.drawables.maskImage]],
 			includes,
 			index
 		);
@@ -927,7 +858,7 @@ export default class ExaiInteractive {
 	getShapes( includes = [1], index = null ) {
 
 		return this.getDrawables(
-			[this.drawableShapes, this.drawableShapeMasks, this.drawableShapeImages],
+			[this.drawableShapes, this.maskShapes],
 			includes,
 			index
 		);
@@ -954,7 +885,6 @@ export default class ExaiInteractive {
 		}
 
 		return drawables;
-
 	}
 
 	/* ------------------------------------------------------ */
