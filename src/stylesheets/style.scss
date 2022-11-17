@@ -438,13 +438,14 @@ $xxl: 1920;
 
 		&__loading,
 		&__list,
+		&__empty,
 		&__error {
 			display: none;
 		}
 
 		&__list-item {
 
-			&--opening {
+			&--example {
 				display: none;
 			}
 		}
