@@ -441,5 +441,12 @@ $xxl: 1920;
 		&__error {
 			display: none;
 		}
+
+		&__list-item {
+
+			&--opening {
+				display: none;
+			}
+		}
 	}
 }
