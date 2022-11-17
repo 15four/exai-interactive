@@ -7,7 +7,19 @@
 import '../stylesheets/style.scss';
 
 import { $on } from './utils';
+import ExaiSmoothScroll from './smooth-scroll';
 import ExaiInteractive from './interactive';
+
+
+/**
+ * Smooth scroll, configuration & initialization.
+ */
+const smoothScrollConfig = {
+
+};
+
+window.ExaiSmoothScroll = new ExaiSmoothScroll( smoothScrollConfig );
+$on( window, 'load', window.ExaiSmoothScroll.init.bind( window.ExaiSmoothScroll ) );
 
 /**
  * Interactive creation, configuration & initialization.
@@ -21,4 +33,4 @@ const interactiveConfig = {
 };
 
 window.ExaiInteractive = new ExaiInteractive( interactiveConfig );
-$on( window, 'load', window.ExaiInteractive.init.bind( window.ExaiInteractive ) );
+$on( window, 'smoothScrollSetup', window.ExaiInteractive.init.bind( window.ExaiInteractive ) );

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "prestart": "rimraf build && rimraf ./stats.json",
-    "start": "webpack-dev-server --open --mode=development",
+    "start": "webpack-dev-server --open --mode=development --host 0.0.0.0",
     "prebuild": "rimraf build && rimraf ./stats.json",
     "build": "webpack --mode=production --progress --display-error-details",
     "check-eslint-config": "eslint --print-config .eslintrc | eslint-config-prettier-check",

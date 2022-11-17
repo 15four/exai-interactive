@@ -9,7 +9,7 @@ import { fabric } from 'fabric';
 
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin( ScrollTrigger );
 
 import { qs, qsa, $on, randInRange, mergeObj, normalizeBoundingRect, transformBoundingRect, getLabelTime } from './utils';
@@ -33,7 +33,7 @@ export default class ExaiInteractive {
 		const defaultConfig = {
 
 			scrollLength               : 9,
-			smoothScroll               : 1.5,
+			scrubFactor                : true,
 
 			snapScroll                 : false,
 			snapDelay                  : 0.2,
@@ -112,8 +112,10 @@ export default class ExaiInteractive {
 	 */
 	init() {
 
-		this.selector       = `.${this.blockClassName}`;
-		this.element        = qs( this.selector );
+		this.selector        = `.${this.blockClassName}`;
+		this.element         = qs( this.selector );
+		this.interactive     = qs( `${this.selector}__interactive`, this.element );
+		this.backgroundSizer = qs( `${this.selector}__background-sizer`, this.element );
 
 		if ( this.element ) {
 
@@ -200,6 +202,10 @@ export default class ExaiInteractive {
 	 */
 	setupAnimations() {
 
+		gsap.config( { force3D: true } );
+
+		ScrollTrigger.config( { ignoreMobileResize: true } );
+
 		// Setting up the drawables ------------------------- //
 
 		// Create all of the references for background canvas entities.
@@ -257,7 +263,110 @@ export default class ExaiInteractive {
 
 		this.drawables = {};
 
+
+
+
+
+		// -----------------------------
+		// -----------------------------
+		// IMAGE EXPERIMENT ------------
+		// -----------------------------
+		// -----------------------------
+
+		// Setting up
+
+		// this.shapeMaskBackground = new fabric.Rect( { fill: 'transparent' } );
+		// this.shapeMaskShapes = [];
+
+		// for ( let i = 0; i < this.shapes.length; i++ ) {
+
+		// 	let shape;
+
+		// 	const allShapeOptions  = { originX: 'center', originY: 'center' };
+		// 	const shapeOptions     = mergeObj( allShapeOptions, { fill: 'black' } );
+
+		// 	switch ( this.shapes[i].tagName.toLowerCase() ) {
+
+		// 		case 'circle':
+		// 			shape     = new fabric.Circle( shapeOptions );
+		// 			break;
+
+		// 		case 'rect':
+		// 			shape     = new fabric.Rect( shapeOptions );
+		// 			break;
+		// 	}
+
+		// 	shape[this.strokeWidthKey] = 0;
+		// 	shape[this.scaleKey]       = 1;
+
+		// 	this.shapeMaskShapes.push( shape );
+		// }
+
+		// this.drawables.shapeMaskGroup = new fabric.Group( [], { absolutePositioned: true } );
+		// this.drawables.shapeMaskGroup.add( this.shapeMaskBackground, ...this.shapeMaskShapes );
+
+		// this.drawables.shapeImage = new fabric.Image(
+		// 	this.setupBackgroundImage, {
+		// 		clipPath        : this.drawables.shapeMaskGroup,
+		// 		originX         : 'center',
+		// 		originY         : 'center',
+		// 		statefullCache  : true,
+		// 		cacheProperties : [this.cacheBusterKey]
+		// 	}
+		// );
+
+		// // Positioning
+
+		// this.shapeMaskBackground.top = -this.dimensions.background.halfHeight;
+		// this.shapeMaskBackground.left = -this.dimensions.background.halfWidth;
+		// this.shapeMaskBackground.width = this.dimensions.background.width;
+		// this.shapeMaskBackground.height = this.dimensions.background.height;
+
+		// this.drawables.shapeMaskGroup.top = 0;
+		// this.drawables.shapeMaskGroup.left = 0;
+		// this.drawables.shapeMaskGroup.width = this.dimensions.background.width;
+		// this.drawables.shapeMaskGroup.height = this.dimensions.background.height;
+
+		// for ( const [i, shapeMaskShape] of this.shapeMaskShapes.entries() ) {
+
+		// 	shapeMaskShape.top  = this.dimensions[`shape${i}FromBackground`].cy - this.dimensions.background.halfHeight;
+		// 	shapeMaskShape.left = this.dimensions[`shape${i}FromBackground`].cx - this.dimensions.background.halfWidth;
+
+		// 	if ( shapeMaskShape instanceof fabric.Circle ) {
+
+		// 		shapeMaskShape.radius = i === this.focalPointShapeIndex
+		// 			? this.dimensions.focalPointFromBackground.halfWidth
+		// 			: this.dimensions[`shape${i}FromBackground`].halfWidth
+
+		// 	}
+		// 	else if ( shapeMaskShape instanceof fabric.Rect ) {
+		// 		shapeMaskShape.width  = this.dimensions[`shape${i}FromBackground`].width;
+		// 		shapeMaskShape.height = this.dimensions[`shape${i}FromBackground`].height;
+		// 		shapeMaskShape.rx     = this.dimensions[`shape${i}FromBackground`].halfHeight;
+		// 		shapeMaskShape.ry     = this.dimensions[`shape${i}FromBackground`].halfHeight;
+		// 	}
+
+		// }
+
+		// for ( const drawable of Object.values( this.drawables ) ) {
+		// 	this.fabricCanvas.add( drawable );
+		// }
+
+		// return;
+
+		// -----------------------------
+		// -----------------------------
+		// END IMAGE EXPERIMENT --------
+		// -----------------------------
+		// -----------------------------
+
+
+
+
+
+
 		this.drawables.rainbow        = new fabric.Rect( { fill: this.styles.rainbowGradient, statefullCache: true, cacheProperties: [this.cacheBusterKey] } );
+
 		this.drawables.rainbowImage   = new fabric.Image( this.setupBackgroundImage, { originX: 'center', originY: 'center' } );
 		this.drawables.rainbowImage[this.scaleKey] = 1;
 
@@ -377,6 +486,8 @@ export default class ExaiInteractive {
 	 */
 	createTheSacredTimeline() {
 
+		return;
+
 		// Creating the timeline object --------------------- //
 
 		const snapScrollProps = {
@@ -391,7 +502,7 @@ export default class ExaiInteractive {
 				trigger             : this.element,
 				pin                 : true,
 				end                 : () => `+=${this.dimensions.window.height * this.config.scrollLength}`,
-				scrub               : this.config.smoothScroll,
+				scrub               : this.config.scrubFactor,
 				invalidateOnRefresh : true,
 				snap                : this.config.snapScroll ? snapScrollProps : false
 			}
@@ -745,6 +856,7 @@ export default class ExaiInteractive {
 	 * Handles resize events.
 	 */
 	handleResize() {
+
 		this.calculateDimensionsAndRatios();
 		this.fabricCanvas.setDimensions( { width: this.dimensions.background.width, height: this.dimensions.background.height } );
 	}
@@ -854,5 +966,21 @@ export default class ExaiInteractive {
 	 */
 	bustCache( object ) {
 		object[this.cacheBusterKey] = Math.random();
+	}
+
+	/**
+	 * Sets explicit units for everything defined by viewport units.
+	 */
+	normalizeViewportUnits() {
+
+		const elements = [this.interactive, this.backgroundSizer];
+
+		for ( const element of elements ) {
+
+			const rect = element.getBoundingClientRect();
+
+			element.style.width  = `${rect.width}px`;
+			element.style.height = `${rect.height}px`;
+		}
 	}
 }
