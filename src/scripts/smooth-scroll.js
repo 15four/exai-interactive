@@ -1,5 +1,8 @@
 /**
  * The Exai Bio Smooth Scroller.
+ * 
+ * Enables smooth, single-threaded, transform-based scrolling on pages with the prerequisite elements.
+ * Also normalizes viewport heights across devices.
  */
 
 import { gsap } from 'gsap';
@@ -25,7 +28,6 @@ export default class ExaiSmoothScroller {
 		// User config
 
 		const defaultConfig = {
-
 			smoothness : 0.75,
 		};
 
@@ -59,12 +61,12 @@ export default class ExaiSmoothScroller {
 				normalizeScroll    : true,
 				ignoreMobileResize : true
 			} );
-
-			this.normalizeViewportHeight();
-			window.dispatchEvent( new Event( 'smoothScrollSetup' ) );
-
-			$on( window, 'resize', this.normalizeViewportHeight.bind( this ) );
 		}
+
+		this.normalizeViewportHeight();
+		window.dispatchEvent( new Event( 'smoothScrollSetup' ) );
+
+		$on( window, 'resize', this.normalizeViewportHeight.bind( this ) );
 	}
 
 	/**
