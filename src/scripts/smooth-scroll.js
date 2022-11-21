@@ -1,6 +1,6 @@
 /**
  * The Exai Bio Smooth Scroller.
- * 
+ *
  * Enables smooth, single-threaded, transform-based scrolling on pages with the prerequisite elements.
  * Also normalizes viewport heights across devices.
  */

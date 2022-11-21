@@ -39,8 +39,8 @@ $on( window, 'smoothScrollSetup', window.ExaiInteractive.init.bind( window.ExaiI
  * Job openings.
  */
 const JobOpeningsConfig = {
-	
+
 };
 
 window.ExaiJobOpenings = new ExaiJobOpenings( JobOpeningsConfig );
-$on( window, 'load', window.ExaiJobOpenings.init.bind( window.ExaiJobOpenings ) );
+//$on( window, 'load', window.ExaiJobOpenings.init.bind( window.ExaiJobOpenings ) );

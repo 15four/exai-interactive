@@ -203,6 +203,7 @@ export default class ExaiInteractive {
 	setupAnimations() {
 
 		gsap.config( { force3D: true } );
+		ScrollTrigger.config( { ignoreMobileResize: true } );
 
 		// Setting up the canvas ---------------------------- //
 
@@ -271,7 +272,7 @@ export default class ExaiInteractive {
 
 		this.drawables.maskImage = new fabric.Image(
 			this.setupBackgroundImage,
-			mergeObj( imageOptions, { statefullCache: true, cacheProperties: [this.cacheBusterKey] } ) 
+			mergeObj( imageOptions, { statefullCache: true, cacheProperties: [this.cacheBusterKey] } )
 		);
 		this.drawables.maskImage[this.scaleKey] = 1;
 
@@ -390,6 +391,8 @@ export default class ExaiInteractive {
 			duration : { min: this.config.snapDurationMin, max: this.config.snapDurationMax }
 		};
 
+		//return;
+
 		this.theSacredTimeline = gsap.timeline(	{
 			onUpdate : this.handleUpdate.bind( this ),
 			scrollTrigger : {
@@ -398,7 +401,8 @@ export default class ExaiInteractive {
 				end                 : () => `+=${this.dimensions.window.height * this.config.scrollLength}`,
 				scrub               : this.config.scrubFactor,
 				invalidateOnRefresh : true,
-				snap                : this.config.snapScroll ? snapScrollProps : false
+				// TODO: Figure out why snapping breaks on mobile
+				// snap                : this.config.snapScroll ? snapScrollProps : false
 			}
 		} );
 
