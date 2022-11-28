@@ -103,7 +103,6 @@ $xxl: 1920;
 			z-index: 0;
 			width: 100%;
 			height: 100%;
-			color: white; // TODO: Remove before launch
 
 			@include wfDesignModeOnly() {
 				display: none;
@@ -423,6 +422,16 @@ $xxl: 1920;
 
 			width: $size;
 			height: $size;
+		}
+
+		// The Fallback
+		//
+		// This is displayed when the user's device is not sufficient to run the interactive.
+		//
+
+		&__fallback {
+			width: 100%;
+			height: 100%;
 		}
 	}
 }
