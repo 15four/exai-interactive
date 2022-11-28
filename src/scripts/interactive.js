@@ -231,14 +231,14 @@ export default class ExaiInteractive {
 			.sort( () => 0.5 - Math.random() )
 			.slice( 0, Math.round( this.shapes.length * this.config.shapeToCount ) );
 
-		const canvas                = qs( `${this.selector}__canvas`, this.element );
-		this.fabricCanvas           = new fabric.Canvas( canvas, { selection: false, enableRetinaScaling: false } );
+		const canvas      = qs( `${this.selector}__canvas`, this.element );
+		this.fabricCanvas = new fabric.Canvas( canvas, { selection: false, enableRetinaScaling: false } );
 
 		// It helps here to calculate and store off some often-needed numbers.
 		// These are all to be stored as bounding rectangle objects.
 
 		this.dimensions = {};
-		this.ratios = {};
+		this.ratios     = {};
 		this.calculateDimensionsAndRatios();
 
 		// Sizes the canvas render area to the size of the background
@@ -906,21 +906,5 @@ export default class ExaiInteractive {
 	 */
 	bustCache( object ) {
 		object[this.cacheBusterKey] = Math.random();
-	}
-
-	/**
-	 * Sets explicit units for everything defined by viewport units.
-	 */
-	normalizeViewportUnits() {
-
-		const elements = [this.interactive, this.backgroundSizer];
-
-		for ( const element of elements ) {
-
-			const rect = element.getBoundingClientRect();
-
-			element.style.width  = `${rect.width}px`;
-			element.style.height = `${rect.height}px`;
-		}
 	}
 }
