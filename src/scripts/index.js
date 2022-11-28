@@ -28,8 +28,7 @@ $on( window, 'load', window.ExaiSmoothScroll.init.bind( window.ExaiSmoothScroll 
  * Interactive.
  */
 const interactiveConfig = {
-	rainbowImageStartingOpacity  : 0.35,
-	shapeOriginCoordinatesSpread : 0.25
+	enabled : false
 };
 
 window.ExaiInteractive = new ExaiInteractive( interactiveConfig );
@@ -43,4 +42,4 @@ const JobOpeningsConfig = {
 };
 
 window.ExaiJobOpenings = new ExaiJobOpenings( JobOpeningsConfig );
-//$on( window, 'load', window.ExaiJobOpenings.init.bind( window.ExaiJobOpenings ) );
+$on( window, 'load', window.ExaiJobOpenings.init.bind( window.ExaiJobOpenings ) );

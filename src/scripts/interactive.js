@@ -32,6 +32,8 @@ export default class ExaiInteractive {
 
 		const defaultConfig = {
 
+			enabled                    : true,
+
 			scrollLength               : 9,
 			scrubFactor                : 0.5,
 
@@ -111,6 +113,10 @@ export default class ExaiInteractive {
 	 * Fires off functionality if and only if the needed elements exist on the DOM.
 	 */
 	init() {
+
+		if ( ! this.config.enabled ) {
+			return;
+		}
 
 		this.selector        = `.${this.blockClassName}`;
 		this.element         = qs( this.selector );
