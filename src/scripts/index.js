@@ -3,6 +3,8 @@
  *
  * This file serves as a place to import all of the code that will eventually be bundled by Webpack to form the production-ready interactive.
  * Here, we can also specify configuration options since there aren't a lot of modules at play.
+ *
+ * @author Nick Patterson <nick@fifteen4.com>
  */
 
 import '../stylesheets/style.scss';

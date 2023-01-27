@@ -28,7 +28,8 @@ export default class ExaiSmoothScroller {
 		// User config
 
 		const defaultConfig = {
-			smoothness : 0.75,
+			smoothness      : 0.75,
+			resizeThreshold : 0.25
 		};
 
 		this.config = mergeObj( defaultConfig, config );
@@ -50,6 +51,8 @@ export default class ExaiSmoothScroller {
 		this.selector = `.${this.blockClassName}`;
 		this.element  = qs( this.selector );
 
+		this.normalizedViewportHeight = null;
+
 		if ( this.element ) {
 
 			this.content = qs( `${this.selector}__content`, this.element );
@@ -70,11 +73,20 @@ export default class ExaiSmoothScroller {
 	}
 
 	/**
-	 * Sets the viewport height unit to be an actual fucking viewport height unit.
+	 * Sets the viewport height unit to be an actual friggin' viewport height unit.
 	 */
 	normalizeViewportHeight() {
-		const viewportHeight = Math.max( document.documentElement.clientHeight, window.innerHeight || 0 );
-		document.documentElement.style.setProperty( `--${this.viewportHeightProperty}`, `${viewportHeight / 100}px` );
+
+		const currentViewportHeight = Math.max( document.documentElement.clientHeight, window.innerHeight || 0 );
+
+		if (
+			! this.normalizedViewportHeight
+			|| Math.abs( this.normalizedViewportHeight - currentViewportHeight ) / this.normalizedViewportHeight >= this.config.resizeThreshold
+		) {
+			this.normalizedViewportHeight = currentViewportHeight;
+		}
+
+		document.documentElement.style.setProperty( `--${this.viewportHeightProperty}`, `${this.normalizedViewportHeight / 100}px` );
 	}
 }
 
